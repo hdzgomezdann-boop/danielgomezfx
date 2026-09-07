@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daniel Gómez FX</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#05080D;--bg2:#090D14;--bg3:#0D1219;
+  --gold:#B8975A;--gold2:#D4AF6E;--gold3:#9A7D48;
+  --gold-dim:rgba(184,151,90,0.09);--gold-line:rgba(184,151,90,0.18);
+  --text:#E8E2D9;--muted:#6B7280;--muted2:#4B5563;
+  --green:#34D399;--white:#FFFFFF;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden}
+
+/* GRAIN */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:0.35}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 48px;display:flex;align-items:center;justify-content:space-between;transition:background 0.5s,backdrop-filter 0.5s,border-color 0.5s;border-bottom:1px solid transparent}
+nav.scrolled{background:rgba(5,8,13,0.94);backdrop-filter:blur(20px);border-color:var(--gold-line)}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--gold);letter-spacing:0.02em}
+.nav-logo span{color:var(--text)}
+.nav-cta{font-size:0.76rem;font-weight:500;color:var(--bg);background:var(--gold);border:none;padding:9px 22px;border-radius:3px;text-decoration:none;cursor:pointer;transition:background 0.2s,transform 0.2s;letter-spacing:0.02em}
+.nav-cta:hover{background:var(--gold2);transform:translateY(-1px)}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:140px 24px 100px;text-align:center;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:0;left:50%;transform:translateX(-50%);width:900px;height:700px;background:radial-gradient(ellipse at 50% 30%,rgba(184,151,90,0.07) 0%,transparent 65%);pointer-events:none}
+.hero-glow2{position:absolute;bottom:-100px;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(184,151,90,0.04) 0%,transparent 70%);pointer-events:none}
+
+/* HERO REVEAL ELEMENTS */
+.h-line{width:1px;height:56px;background:linear-gradient(to bottom,transparent,var(--gold),transparent);margin:0 auto 28px;opacity:0;transform:scaleY(0);transform-origin:top;transition:opacity 1s 0.1s,transform 1s 0.1s}
+.h-line.v{opacity:1;transform:scaleY(1)}
+.h-eyebrow{font-size:0.68rem;font-weight:500;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;margin-bottom:20px;opacity:0;transform:translateY(12px);transition:opacity 0.8s 0.3s,transform 0.8s 0.3s}
+.h-eyebrow.v{opacity:1;transform:translateY(0)}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,7vw,5.8rem);font-weight:900;line-height:1.05;letter-spacing:-0.025em;max-width:820px;margin-bottom:24px;opacity:0;transform:translateY(28px);transition:opacity 1s 0.45s,transform 1s 0.45s}
+.hero h1.v{opacity:1;transform:translateY(0)}
+.gold-text{color:var(--gold)}
+.italic-text{font-style:italic}
+.hero-sub{font-size:1rem;color:var(--muted);max-width:460px;margin:0 auto 44px;line-height:1.85;font-weight:300;opacity:0;transform:translateY(20px);transition:opacity 0.8s 0.65s,transform 0.8s 0.65s}
+.hero-sub.v{opacity:1;transform:translateY(0)}
+
+/* STATS COUNTER */
+.stats-row{display:flex;border:1px solid var(--gold-line);border-radius:6px;overflow:hidden;margin-bottom:44px;opacity:0;transform:translateY(20px);transition:opacity 0.8s 0.8s,transform 0.8s 0.8s}
+.stats-row.v{opacity:1;transform:translateY(0)}
+.stat{padding:20px 40px;text-align:center;position:relative;flex:1}
+.stat+.stat::before{content:'';position:absolute;left:0;top:22%;height:56%;width:1px;background:var(--gold-line)}
+.stat-num{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:700;color:var(--gold);line-height:1;margin-bottom:5px}
+.stat-label{font-size:0.65rem;color:var(--muted);font-weight:400;letter-spacing:0.05em}
+
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:40px;max-width:560px;opacity:0;transform:translateY(16px);transition:opacity 0.8s 0.95s,transform 0.8s 0.95s}
+.chips.v{opacity:1;transform:translateY(0)}
+.chip{display:flex;align-items:center;gap:6px;border:1px solid var(--gold-line);border-radius:100px;padding:6px 14px;font-size:0.73rem;color:var(--muted);transition:border-color 0.3s,color 0.3s}
+.chip:hover{border-color:var(--gold);color:var(--text)}
+.chip-dot{width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;animation:blink 2.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* TESTI MINI */
+.testi-mini-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:48px;opacity:0;transform:translateY(20px);transition:opacity 0.8s 1.05s,transform 0.8s 1.05s}
+.testi-mini-row.v{opacity:1;transform:translateY(0)}
+.testi-mini{width:175px;border:1px solid var(--gold-line);border-radius:6px;overflow:hidden;background:var(--bg2);transition:border-color 0.3s,transform 0.4s cubic-bezier(.16,1,.3,1),box-shadow 0.4s}
+.testi-mini:hover{border-color:var(--gold);transform:translateY(-6px);box-shadow:0 20px 40px rgba(0,0,0,0.4),0 0 0 1px rgba(184,151,90,0.1)}
+.testi-mini img{width:100%;height:155px;object-fit:cover;object-position:top;display:block;transition:transform 0.5s}
+.testi-mini:hover img{transform:scale(1.04)}
+.testi-mini-body{padding:12px 14px}
+.testi-mini-result{font-family:'Playfair Display',serif;font-size:0.92rem;font-weight:700;color:var(--gold);margin-bottom:3px}
+.testi-mini-name{font-size:0.67rem;color:var(--muted)}
+
+/* CTA HERO */
+.hero-cta-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;opacity:0;transform:translateY(16px);transition:opacity 0.8s 1.15s,transform 0.8s 1.15s}
+.hero-cta-wrap.v{opacity:1;transform:translateY(0)}
+.btn-wa{display:inline-flex;align-items:center;gap:12px;background:var(--gold);color:var(--bg);font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;padding:16px 36px;border-radius:3px;text-decoration:none;border:none;cursor:pointer;transition:background 0.25s,transform 0.25s,box-shadow 0.25s;position:relative;overflow:hidden;letter-spacing:0.01em}
+.btn-wa::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.12) 0%,transparent 55%)}
+.btn-wa:hover{background:var(--gold2);transform:translateY(-3px);box-shadow:0 12px 32px rgba(184,151,90,0.25)}
+.hero-note{font-size:0.68rem;color:var(--muted2)}
+
+/* PARALLAX HERO BG LINES */
+.hero-lines{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.hero-lines span{position:absolute;left:50%;width:1px;background:linear-gradient(to bottom,transparent,rgba(184,151,90,0.06),transparent);transform:translateX(-50%)}
+.hero-lines span:nth-child(1){height:100%;margin-left:-280px}
+.hero-lines span:nth-child(2){height:100%;margin-left:0}
+.hero-lines span:nth-child(3){height:100%;margin-left:280px}
+
+/* PROOF BAR */
+.proof-bar{background:var(--bg2);border-top:1px solid var(--gold-line);border-bottom:1px solid var(--gold-line);padding:18px 48px;display:flex;justify-content:center;gap:48px;flex-wrap:wrap}
+.proof-item{display:flex;align-items:center;gap:8px;font-size:0.74rem;color:var(--muted);letter-spacing:0.02em}
+.proof-dot{width:4px;height:4px;border-radius:50%;background:var(--gold);flex-shrink:0}
+
+/* SECTIONS */
+.section{padding:96px 24px;max-width:960px;margin:0 auto}
+.section-eyebrow{font-size:0.65rem;color:var(--gold);letter-spacing:0.16em;margin-bottom:14px;font-weight:500;text-transform:uppercase}
+.section h2{font-family:'Playfair Display',serif;font-size:clamp(2rem,4.5vw,3.2rem);font-weight:900;line-height:1.1;letter-spacing:-0.025em;margin-bottom:14px}
+.section h2 .gold-text{color:var(--gold)}
+.section h2 .italic-text{font-style:italic}
+.section-lead{font-size:0.93rem;color:var(--muted);max-width:500px;line-height:1.85;font-weight:300;margin-bottom:52px}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.85s cubic-bezier(.16,1,.3,1),transform 0.85s cubic-bezier(.16,1,.3,1)}
+.reveal.v{opacity:1;transform:translateY(0)}
+.d1{transition-delay:0.08s}.d2{transition-delay:0.16s}.d3{transition-delay:0.24s}.d4{transition-delay:0.32s}.d5{transition-delay:0.4s}
+
+/* RESULTS GRID */
+.results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1px;background:var(--gold-line);border:1px solid var(--gold-line);border-radius:6px;overflow:hidden;margin-bottom:1px}
+.result-card{background:var(--bg2);overflow:hidden;transition:background 0.35s}
+.result-card:hover{background:var(--bg3)}
+.result-card-img-wrap{overflow:hidden}
+.result-card img{width:100%;height:195px;object-fit:cover;object-position:top;display:block;transition:transform 0.6s cubic-bezier(.16,1,.3,1)}
+.result-card:hover img{transform:scale(1.06)}
+.result-card-body{padding:18px 20px}
+.result-amount{font-family:'Playfair Display',serif;font-size:1.45rem;font-weight:700;color:var(--green);margin-bottom:4px}
+.result-desc{font-size:0.72rem;color:var(--muted);font-weight:300}
+
+.withdrawals-row{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--gold-line);border:1px solid var(--gold-line);border-radius:0 0 6px 6px;overflow:hidden;margin-bottom:52px}
+.w-card{background:var(--bg2);overflow:hidden;transition:background 0.35s}
+.w-card:hover{background:var(--bg3)}
+.w-card-img-wrap{overflow:hidden}
+.w-card img{width:100%;height:150px;object-fit:cover;object-position:top;display:block;transition:transform 0.6s cubic-bezier(.16,1,.3,1)}
+.w-card:hover img{transform:scale(1.05)}
+.w-card-body{padding:16px 20px}
+.w-label{font-size:0.66rem;color:var(--muted);margin-bottom:6px;letter-spacing:0.04em;font-weight:300}
+.w-amount{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--gold)}
+
+/* COMMUNITY */
+.community-card{display:flex;border:1px solid var(--gold-line);border-radius:6px;overflow:hidden;margin-bottom:52px;background:var(--bg2);transition:border-color 0.3s}
+.community-card:hover{border-color:rgba(184,151,90,0.35)}
+.community-card-img{width:220px;flex-shrink:0;overflow:hidden}
+.community-card-img img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;transition:transform 0.6s cubic-bezier(.16,1,.3,1)}
+.community-card:hover .community-card-img img{transform:scale(1.05)}
+.community-card-body{padding:32px 36px;display:flex;flex-direction:column;justify-content:center}
+.community-card-body h3{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--gold);margin-bottom:12px;line-height:1.2}
+.community-card-body p{font-size:0.84rem;color:var(--muted);line-height:1.85;font-weight:300}
+
+/* ALL TESTI */
+.testi-full-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1px;background:var(--gold-line);border:1px solid var(--gold-line);border-radius:6px;overflow:hidden}
+.testi-full{background:var(--bg2);overflow:hidden;transition:background 0.35s}
+.testi-full:hover{background:var(--bg3)}
+.testi-full-img{overflow:hidden}
+.testi-full img{width:100%;height:220px;object-fit:cover;object-position:top;display:block;transition:transform 0.6s cubic-bezier(.16,1,.3,1)}
+.testi-full:hover img{transform:scale(1.05)}
+.testi-full-body{padding:14px 18px}
+.testi-result{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--gold);margin-bottom:3px}
+.testi-name{font-size:0.68rem;color:var(--muted);font-weight:300}
+
+/* FINAL CTA */
+.final-cta{border-top:1px solid var(--gold-line);padding:100px 32px;text-align:center;position:relative;overflow:hidden}
+.final-cta::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:400px;background:radial-gradient(ellipse,rgba(184,151,90,0.06) 0%,transparent 70%);pointer-events:none}
+.final-cta h2{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,5.5vw,4rem);font-weight:900;letter-spacing:-0.025em;margin-bottom:16px;line-height:1.05}
+.final-cta>p{color:var(--muted);font-size:0.9rem;margin-bottom:40px;max-width:380px;margin-left:auto;margin-right:auto;line-height:1.85;font-weight:300}
+
+/* FOOTER */
+footer{padding:28px 48px;border-top:1px solid var(--gold-line);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-left{font-size:0.67rem;color:var(--muted)}
+.footer-left a{color:var(--gold);text-decoration:none}
+.footer-social{display:flex;align-items:center;gap:12px}
+.social-link{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid var(--gold-line);border-radius:50%;color:var(--muted);text-decoration:none;transition:border-color 0.3s,color 0.3s,transform 0.3s}
+.social-link:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+
+@media(max-width:768px){
+  nav{padding:16px 20px}
+  .hero{padding:120px 20px 80px}
+  .stats-row{flex-wrap:wrap}
+  .stat{padding:16px 20px;flex:0 0 50%}
+  .stat:nth-child(3){flex:0 0 100%}
+  .stat+.stat::before{display:none}
+  .testi-mini{width:145px}
+  .withdrawals-row{grid-template-columns:1fr}
+  .community-card{flex-direction:column}
+  .community-card-img{width:100%;height:200px}
+  .proof-bar{gap:18px;padding:16px 20px}
+  footer{flex-direction:column;align-items:center;text-align:center;padding:24px 20px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<nav id="mainNav">
+  <div class="nav-logo">Daniel<span> Gómez FX</span></div>
+  <a href="https://chat.whatsapp.com/J6RiNiM0yinGslCz8HgF1j?s=cl&p=i&mlu=4" class="nav-cta" target="_blank">Unirme gratis</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-lines"><span></span><span></span><span></span></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+
+  <div class="h-line" id="hLine"></div>
+  <div class="h-eyebrow" id="hEye">Trading real en Latinoamérica</div>
+  <h1 id="hTitle">Opera en los mercados<br>con un sistema<br><span class="gold-text italic-text">real y probado</span></h1>
+  <p class="hero-sub" id="hSub">Soy Daniel Gómez FX — 4 años en los mercados, más de un año formando traders con resultados reales y comprobados en toda Latinoamérica.</p>
+
+  <div class="stats-row" id="hStats">
+    <div class="stat">
+      <div class="stat-num" data-target="4" data-suffix="+">0</div>
+      <div class="stat-label">años en los mercados</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" data-prefix="$" data-target="50" data-suffix="K+">$0</div>
+      <div class="stat-label">resultados de estudiantes</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">1–2%</div>
+      <div class="stat-label">riesgo máximo por trade</div>
+    </div>
+  </div>
+
+  <div class="chips" id="hChips">
+    <div class="chip"><span class="chip-dot"></span>Cuentas de $200 → $50,000 USD</div>
+    <div class="chip"><span class="chip-dot"></span>Traders fondeados</div>
+    <div class="chip"><span class="chip-dot"></span>Retiros constantes comprobados</div>
+    <div class="chip"><span class="chip-dot"></span>Comunidad activa LATAM</div>
+  </div>
+
+  <div class="testi-mini-row" id="hTesti">
+    <div class="testi-mini">
+      <img src="testi1.jpg" alt="Abigail">
+      <div class="testi-mini-body"><div class="testi-mini-result">+$2,300 + Fondeada</div><div class="testi-mini-name">Abigail · México</div></div>
+    </div>
+    <div class="testi-mini">
+      <img src="testi2b.jpg" alt="Alejandro">
+      <div class="testi-mini-body"><div class="testi-mini-result">$200 → +$50,000</div><div class="testi-mini-name">Alejandro · Puebla</div></div>
+    </div>
+    <div class="testi-mini">
+      <img src="testi3.jpg" alt="Estudiante">
+      <div class="testi-mini-body"><div class="testi-mini-result">$200 → $3,000+</div><div class="testi-mini-name">Estudiante UT</div></div>
+    </div>
+  </div>
+
+  <div class="hero-cta-wrap" id="hCta">
+    <a href="https://chat.whatsapp.com/J6RiNiM0yinGslCz8HgF1j?s=cl&p=i&mlu=4" class="btn-wa" target="_blank">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Unirme al grupo — es gratis
+    </a>
+    <p class="hero-note">Aprobación personal. Sin bots, sin spam.</p>
+  </div>
+</section>
+
+<div class="proof-bar">
+  <div class="proof-item"><span class="proof-dot"></span>Resultados comprobados</div>
+  <div class="proof-item"><span class="proof-dot"></span>Gestión de riesgo real</div>
+  <div class="proof-item"><span class="proof-dot"></span>Comunidad activa en LATAM</div>
+  <div class="proof-item"><span class="proof-dot"></span>Trades en tiempo real</div>
+</div>
+
+<section class="section">
+  <div class="reveal">
+    <div class="section-eyebrow">Resultados reales</div>
+    <h2>Los números<br><span class="italic-text gold-text">no mienten</span></h2>
+    <p class="section-lead">Capturas reales de operaciones reales. No son proyecciones ni promesas — es el historial.</p>
+  </div>
+
+  <div class="results-grid reveal d1">
+    <div class="result-card"><div class="result-card-img-wrap"><img src="testi4.jpg" alt="$1,100"></div><div class="result-card-body"><div class="result-amount">$1,100 USD</div><div class="result-desc">En un solo trade · 1:11 R:R</div></div></div>
+    <div class="result-card"><div class="result-card-img-wrap"><img src="testi5.jpg" alt="Brandon"></div><div class="result-card-body"><div class="result-amount">$260 → $689</div><div class="result-desc">Brandon Ventura · cuenta creciendo</div></div></div>
+    <div class="result-card"><div class="result-card-img-wrap"><img src="testi6.jpg" alt="Duplicó"></div><div class="result-card-body"><div class="result-amount">Duplicó en 7 días</div><div class="result-desc">Estudiante UT · operando EURUSD</div></div></div>
+    <div class="result-card"><div class="result-card-img-wrap"><img src="testi7.jpg" alt="Ricardo"></div><div class="result-card-body"><div class="result-amount">Semana positiva</div><div class="result-desc">Ricardo · consistencia semana a semana</div></div></div>
+  </div>
+
+  <div class="withdrawals-row reveal d2">
+    <div class="w-card"><div class="w-card-img-wrap"><img src="testi1.jpg" alt="Abigail"></div><div class="w-card-body"><div class="w-label">Retiro comprobado</div><div class="w-amount">+$2,300 + Fondeada FTMO</div></div></div>
+    <div class="w-card"><div class="w-card-img-wrap"><img src="testi2b.jpg" alt="Alejandro"></div><div class="w-card-body"><div class="w-label">De $200 a más de</div><div class="w-amount">$50,000 USD</div></div></div>
+  </div>
+
+  <div class="community-card reveal d3">
+    <div class="community-card-img"><img src="testi3.jpg" alt="Comunidad"></div>
+    <div class="community-card-body">
+      <h3>Estudiantes creciendo semana a semana</h3>
+      <p>Dentro de United Traders nuestros miembros generan resultados reales aplicando el mismo sistema. Todos comenzaron con $200 USD y gestión de riesgo controlada.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="reveal">
+    <div class="section-eyebrow">La comunidad habla</div>
+    <h2>Más de un año,<br><span class="italic-text gold-text">más de cien traders</span></h2>
+    <p class="section-lead">Resultados reales de personas reales. Todos iniciaron con un mínimo de $200 USD.</p>
+  </div>
+  <div class="testi-full-grid reveal d1">
+    <div class="testi-full"><div class="testi-full-img"><img src="testi1.jpg" alt="Abigail"></div><div class="testi-full-body"><div class="testi-result">+$2,300 + Fondeada FTMO</div><div class="testi-name">Abigail Reyes · México</div></div></div>
+    <div class="testi-full"><div class="testi-full-img"><img src="testi2a.jpg" alt="Alejandro"></div><div class="testi-full-body"><div class="testi-result">$200 → +$50,000 USD</div><div class="testi-name">Alejandro · Puebla · menos de 1 año</div></div></div>
+    <div class="testi-full"><div class="testi-full-img"><img src="testi3.jpg" alt="3K"></div><div class="testi-full-body"><div class="testi-result">$200 → $3,000+ con retiros</div><div class="testi-name">Estudiante United Traders</div></div></div>
+    <div class="testi-full"><div class="testi-full-img"><img src="testi4.jpg" alt="1100"></div><div class="testi-full-body"><div class="testi-result">$1,100 en un solo trade</div><div class="testi-name">Estudiante United Traders</div></div></div>
+  </div>
+</section>
+
+<div class="final-cta">
+  <h2 class="reveal">Tu primer paso<br><span class="gold-text italic-text">empieza aquí</span></h2>
+  <p class="reveal d1">Únete al grupo privado. Te apruebo personalmente y te explico cómo empezar desde cero.</p>
+  <div class="reveal d2">
+    <a href="https://chat.whatsapp.com/J6RiNiM0yinGslCz8HgF1j?s=cl&p=i&mlu=4" class="btn-wa" target="_blank">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Quiero unirme ahora
+    </a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-left">
+    <p>© 2025 Daniel Gómez FX · <a href="https://wa.link/9xt1dr" target="_blank">Contacto</a> · El trading conlleva riesgo. Los resultados pasados no garantizan rendimientos futuros.</p>
+  </div>
+  <div class="footer-social">
+    <a href="https://www.instagram.com/danniellgomez._" class="social-link" target="_blank" aria-label="Instagram">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+    </a>
+    <a href="https://chat.whatsapp.com/J6RiNiM0yinGslCz8HgF1j?s=cl&p=i&mlu=4" class="social-link" target="_blank" aria-label="WhatsApp">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
+  </div>
+</footer>
+
+<script>
+// NAV scroll
+window.addEventListener('scroll',()=>{
+  document.getElementById('mainNav').classList.toggle('scrolled',window.scrollY>50)
+})
+
+// Hero sequence
+window.addEventListener('load',()=>{
+  const seq=[
+    [100,'hLine','v'],[300,'hEye','v'],[500,'hTitle','v'],
+    [700,'hSub','v'],[850,'hStats','v'],[1000,'hChips','v'],
+    [1100,'hTesti','v'],[1200,'hCta','v']
+  ]
+  seq.forEach(([delay,id,cls])=>{
+    setTimeout(()=>{const el=document.getElementById(id);if(el)el.classList.add(cls)},delay)
+  })
+
+  // Counters
+  setTimeout(()=>{
+    document.querySelectorAll('[data-target]').forEach(el=>{
+      const target=+el.dataset.target
+      const prefix=el.dataset.prefix||''
+      const suffix=el.dataset.suffix||''
+      let current=0
+      const step=target/40
+      const timer=setInterval(()=>{
+        current=Math.min(current+step,target)
+        el.textContent=prefix+Math.floor(current)+suffix
+        if(current>=target)clearInterval(timer)
+      },30)
+    })
+  },850)
+})
+
+// Scroll reveal
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('v');obs.unobserve(e.target)}})
+},{threshold:0.1})
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el))
+
+// Parallax hero lines
+window.addEventListener('scroll',()=>{
+  const y=window.scrollY
+  const lines=document.querySelector('.hero-lines')
+  if(lines)lines.style.transform=`translateY(${y*0.15}px)`
+})
+</script>
+</body>
+</html>
